@@ -1,0 +1,8 @@
+export type Bin = { id: number; name: string; demand: number; latitude: number; longitude: number; status: string; snapped_node?: number };
+export type Truck = { id: number; name: string; capacity: number; status: string };
+export type NetworkStatus = { loaded: boolean; center_latitude?: number; center_longitude?: number; distance_m?: number; nodes: number; edges: number; source: string };
+export type RoadEdge = { geometry: number[][] };
+export type Depot = { id: number; name: string; latitude: number; longitude: number; snapped_node?: number };
+export type SearchResult = { display_name: string; latitude: number; longitude: number; type: string };
+export type TruckRoute = { truck_id: number; truck_name: string; sequence: number[]; stop_names: string[]; geometry: number[][]; distance_m: number; collected_demand: number; capacity_utilization: number; depot_returns: number; trips: number };
+export type Route = { routes: TruckRoute[]; total_distance_m: number; visited_bins: number; collected_demand: number; unassigned_bin_ids: number[]; execution_time_ms: number; constraint_violations: string[]; is_real_road_network: boolean; network_source: string };
