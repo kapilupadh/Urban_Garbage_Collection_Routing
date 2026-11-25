@@ -1,14 +1,5 @@
 # Urban Garbage Collection Routing
-
-**Graph Theory Assignment**
-**Group 18**
-
-| Group member roll numbers |
-| --- |
-| CSMMA26A037 |
-| CSMMA26A038 |
-| CSMMA26A048 |
-
+    
 ### Project focus
 
 The Chinese Postman method for covering a municipal road network, with depot-based trips for capacity-constrained waste collection.
