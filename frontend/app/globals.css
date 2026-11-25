@@ -2,7 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light; }
 body { margin: 0; background: #f5f7fb; color: #172033; }
-button, input, select { font: inherit; }
-.leaflet-container { height: 100%; width: 100%; }
+
+@layer components {
+  .panel { @apply rounded-xl border border-slate-200 bg-white p-4 text-sm shadow-sm; }
+  .panel h2 { @apply text-base font-semibold; }
+  .panel dd { @apply text-base font-semibold; }
+  .panel dt { @apply text-slate-600; }
+  .panel label { @apply block text-sm font-medium; }
+  .panel label.flex { display: flex; }
+  .panel input:not([type="checkbox"]) { @apply mt-1 block w-full min-w-0 rounded-md border border-slate-300 px-2.5 py-2; }
+  .primary { @apply rounded-md bg-blue-700 px-3 py-2 font-semibold text-white hover:bg-blue-800; }
+  .secondary { @apply rounded-md border border-slate-300 bg-white px-3 py-2 font-medium hover:bg-slate-100; }
+  .primary:disabled, .secondary:disabled { @apply cursor-not-allowed opacity-50; }
+  .secondary[aria-pressed="true"] { @apply border-blue-600 bg-blue-50 text-blue-800; }
+}
+
+.route-map { height: clamp(360px, 62vh, 700px); width: 100%; z-index: 0; }
+.map-picking, .map-picking .leaflet-interactive { cursor: crosshair; }
+.route-map.map-picking .leaflet-marker-icon { pointer-events: none; }
+.route-marker { align-items: center; border-radius: 50%; display: flex; justify-content: center; }
+.route-marker-depot, .route-marker-truck { background: #0f172a; border: 2px solid #fff; box-shadow: 0 2px 8px rgb(15 23 42 / 35%); color: #fff; }
+.route-marker-truck { background: #1d4ed8; }

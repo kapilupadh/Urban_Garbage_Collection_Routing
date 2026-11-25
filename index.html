@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UrbanRoute browser demo</title>
+</head>
+<body>
+  <main>
+    <h1>UrbanRoute browser demo</h1>
+    <p>Route collection trucks on OpenStreetMap roads with the directed Chinese Postman method.</p>
+    <p><a id="demo" href="/demo">Open the live simulator</a></p>
+    <p>See the README for the build and server commands.</p>
+  </main>
+  <script>
+    if (location.protocol === "file:") {
+      document.getElementById("demo").href = "http://localhost:8000/demo";
+    }
+  </script>
+</body>
+</html>
