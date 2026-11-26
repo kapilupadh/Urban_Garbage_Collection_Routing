@@ -98,12 +98,12 @@ export default function RouteMap({ bins, route, network, depot, edges, picking, 
       <MapViewport edges={roads} picking={picking} onPick={onPick} />
       <Polyline positions={roads} pathOptions={roadStyle} />
       {route?.routes.map((item, index) => <Polyline key={item.truck_id} positions={item.geometry as Point[]} pathOptions={{ color: colors[index % colors.length], weight: 4, opacity: 0.8 }}>
-        <Popup>{item.truck_name} · {item.trips} {item.trips === 1 ? "trip" : "trips"}</Popup>
+        {!picking && <Popup>{item.truck_name} · {item.trips} {item.trips === 1 ? "trip" : "trips"}</Popup>}
       </Polyline>)}
       {activeTrip && <Polyline positions={activeTrip.geometry as Point[]} pathOptions={{ color: "#111827", weight: 6 }} />}
       <Marker icon={depotIcon} position={depotPoint}><Popup>{depot.name}</Popup></Marker>
       {bins.map((bin) => <CircleMarker key={bin.id} center={[bin.latitude, bin.longitude]} radius={6} pathOptions={{ color: "#fff", weight: 2, fillColor: "#1d4ed8", fillOpacity: 1 }}>
-        <Popup><strong>{bin.name}</strong><br />{bin.demand.toLocaleString()} kg</Popup>
+        {!picking && <Popup><strong>{bin.name}</strong><br />{bin.demand.toLocaleString()} kg</Popup>}
       </CircleMarker>)}
       {activeTrip && <ReplayMarker trip={activeTrip} progress={progress} />}
     </MapContainer>

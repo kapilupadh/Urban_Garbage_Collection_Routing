@@ -31,6 +31,11 @@ def demo_launcher():
     return FileResponse(project / "index.html")
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse(project / "frontend" / "app" / "favicon.ico", media_type="image/x-icon")
+
+
 @app.get("/demo", include_in_schema=False)
 def browser_demo():
     index = web_build / "index.html"

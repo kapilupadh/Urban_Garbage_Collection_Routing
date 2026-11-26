@@ -156,11 +156,6 @@ class RoadNetworkService:
         network.depot_node = network.snap_depot(latitude, longitude)
         return network
 
-    def snap(self, latitude: float, longitude: float) -> Hashable:
-        if not self.network:
-            raise RuntimeError("Load an OpenStreetMap road network before snapping locations")
-        return self.network.snap(latitude, longitude)
-
     def status(self) -> dict:
         if not self.network:
             return {"loaded": False, "source": "OpenStreetMap", "nodes": 0, "edges": 0}

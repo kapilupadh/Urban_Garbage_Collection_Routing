@@ -113,6 +113,15 @@ class RouteResponse(BaseModel):
     network_source: str = "OpenStreetMap"
 
 
+class SessionSnapshot(BaseModel):
+    bins: List[Bin]
+    trucks: List[Truck]
+    depot: Depot
+    network: NetworkStatus
+    road_edges: List[RoadEdge]
+    route: Optional[RouteResponse]
+
+
 class BenchmarkRequest(BaseModel):
     bin_count: int = Field(default=10, ge=10, le=1000)
     truck_count: int = Field(default=3, ge=1, le=100)

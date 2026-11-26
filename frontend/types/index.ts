@@ -7,3 +7,4 @@ export type SearchResult = { display_name: string; latitude: number; longitude: 
 export type RouteTrip = { sequence: number[]; stop_names: string[]; geometry: number[][]; distance_m: number; collected_demand: number };
 export type TruckRoute = { truck_id: number; truck_name: string; sequence: number[]; stop_names: string[]; geometry: number[][]; distance_m: number; collected_demand: number; capacity_utilization: number; depot_returns: number; trips: number; trip_details: RouteTrip[] };
 export type Route = { routes: TruckRoute[]; total_distance_m: number; postman_distance_m: number; covered_edges: number; excluded_edges: number; visited_bins: number; collected_demand: number; unassigned_bin_ids: number[]; execution_time_ms: number; constraint_violations: string[]; is_real_road_network: boolean; network_source: string };
+export type SessionSnapshot = { bins: Bin[]; trucks: Truck[]; depot: Depot; network: NetworkStatus; road_edges: RoadEdge[]; route: Route | null };

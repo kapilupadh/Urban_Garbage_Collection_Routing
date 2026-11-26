@@ -75,6 +75,15 @@ class ApiTests(unittest.TestCase):
 
     def test_load_optimize_edit_delete_and_failed_reload(self):
         self.assertEqual(self.client.get("/api/health").json()["road_network_loaded"], False)
+        initial = self.client.get("/api/session").json()
+        self.assertFalse(initial["network"]["loaded"])
+        self.assertEqual(initial["road_edges"], [])
+        self.assertEqual(initial["bins"], [])
+        self.assertIsNone(initial["route"])
+        self.assertEqual(initial["trucks"], self.client.get("/api/trucks").json())
+        favicon = self.client.get("/favicon.ico")
+        self.assertEqual(favicon.status_code, 200)
+        self.assertEqual(favicon.headers["content-type"], "image/x-icon")
         self.assertEqual(self.client.get("/api/network/edges").status_code, 409)
         self.assertEqual(self.client.post("/api/routes/optimize", json={}).status_code, 409)
         network = self.load_fixture()
@@ -109,6 +118,12 @@ class ApiTests(unittest.TestCase):
             self.assertEqual(trip["collected_demand"], 1)
         self.assertAlmostEqual(sum(trip["distance_m"] for trip in details), plan["total_distance_m"])
         self.assertEqual(self.client.get("/api/routes").json(), [plan])
+        snapshot = self.client.get("/api/session").json()
+        self.assertEqual(snapshot["network"], network)
+        self.assertEqual(snapshot["road_edges"], edges)
+        self.assertEqual(snapshot["depot"], depot)
+        self.assertEqual(snapshot["bins"], [first, second, distant])
+        self.assertEqual(snapshot["route"], plan)
         with patch.object(api.network_service, "fetch", side_effect=RuntimeError("Provider unavailable")):
             failed = self.client.post("/api/network/load", json={"latitude": 0, "longitude": 0})
         self.assertEqual(failed.status_code, 502)

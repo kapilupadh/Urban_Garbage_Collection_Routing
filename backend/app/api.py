@@ -19,6 +19,7 @@ from app.schemas import (
     OptimizeRequest,
     RoadEdge,
     RouteResponse,
+    SessionSnapshot,
     Truck,
     TruckCreate,
 )
@@ -56,6 +57,19 @@ def health() -> dict:
     return {"status": "ok", "road_network_loaded": network_service.network is not None}
 
 
+@router.get("/session", response_model=SessionSnapshot)
+@synchronized
+def session_snapshot() -> SessionSnapshot:
+    return SessionSnapshot(
+        bins=list(BINS.values()),
+        trucks=list(TRUCKS.values()),
+        depot=DEPOT.model_copy(),
+        network=NetworkStatus(**network_service.status()),
+        road_edges=road_geometry(),
+        route=last_route,
+    )
+
+
 @router.get("/locations/search", response_model=List[LocationSearchResult])
 def search_locations(query: str = Query(min_length=2, max_length=200)) -> List[dict]:
     if len(query.strip()) < 2:
@@ -72,12 +86,16 @@ def network_status() -> dict:
     return network_service.status()
 
 
+def road_geometry() -> List[RoadEdge]:
+    return [RoadEdge(geometry=geometry) for geometry in network_service.edges_geometry()]
+
+
 @router.get("/network/edges", response_model=List[RoadEdge])
 @synchronized
-def network_edges() -> List[dict]:
+def network_edges() -> List[RoadEdge]:
     if not network_service.network:
         raise HTTPException(status_code=409, detail="Load an OpenStreetMap road network first")
-    return [{"geometry": geometry} for geometry in network_service.edges_geometry()]
+    return road_geometry()
 
 
 @router.post("/network/load", response_model=NetworkStatus)

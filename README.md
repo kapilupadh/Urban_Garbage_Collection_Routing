@@ -394,6 +394,7 @@ The optimizer uses a directed or undirected graph according to the input. The so
 | `GET /api/locations/search` | Find candidate places. |
 | `POST /api/network/load` | Load roads around a geographic selection. |
 | `GET /api/network/edges` | Inspect the loaded road edges. |
+| `GET /api/session` | Load the dashboard state, including the road geometry and latest route. |
 | `GET /api/bins` and `GET /api/trucks` | Read the active roster. |
 | `POST /api/routes/optimize` | Compute coverage and trips for the selected inputs. |
 | `POST /api/benchmarks/synthetic` | Run the deterministic grid benchmark. |
@@ -416,31 +417,33 @@ The browser layout lets the operator define the operating area, position bins an
 
 The map draws the planned route by joining the edge geometry in travel order. A trip can pass the same street more than once, so overlapping lines on the map may represent several traversals. The distance totals and ordered geometry account for those repetitions. Playback follows the selected trip's geometry with a moving marker and supports play, pause and seeking. The animation compresses the trip into a short preview.
 
-The exported demonstration is served by FastAPI at `/demo`, and the root `index.html` links to that interface. During development the Next.js dashboard runs separately, with its API URL configurable through `NEXT_PUBLIC_API_URL`. The project test log records checks of the exported and development browser workflows, including playback and a narrow viewport. [Project test log](TEST_LOG.md).
+FastAPI serves the exported demonstration at `/demo`, and the root `index.html` links to it. In development, the Next.js server forwards the dashboard's API requests to FastAPI. Set `NEXT_PUBLIC_API_URL` to use a separately running API with the Next.js server.
 
 <!-- page -->
 
 ### 4.4 Running and testing the application
 
-From the repository root, build the exported browser application.
-
-```bash
-cd frontend
-npm ci
-npm run build:demo
-```
-
-In another terminal, start the Python API from the repository root.
+From the repository root, install the Python and frontend dependencies once.
 
 ```bash
 cd backend
 python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m uvicorn app.main:app --port 8000
+.venv/bin/python -m pip install -r requirements.txt
+cd ../frontend
+npm ci
 ```
 
-Open the browser demo at [localhost:8000/demo](http://localhost:8000/demo). For dashboard development, use `npm run dev` in the frontend directory and open [localhost:3000](http://localhost:3000). The API serves an interactive endpoint reference at [localhost:8000/docs](http://localhost:8000/docs).
+On Windows, use `.venv\Scripts\python.exe` in place of `.venv/bin/python`.
+
+From `frontend/`, run `npm run dev` and open [localhost:3000](http://localhost:3000). The command starts FastAPI on port 8000 and waits for it before starting the dashboard. It reuses a simulator API already running on that port. The API reference is at [localhost:8000/docs](http://localhost:8000/docs).
+
+For a production Next.js preview, run `npm run build` and then `npm start` in `frontend/`. To build the FastAPI-hosted browser demo instead, run `npm run build:demo` in `frontend/`, then start the backend from `backend/`.
+
+```bash
+.venv/bin/python -m uvicorn app.main:app --port 8000
+```
+
+Open the exported demo at [localhost:8000/demo](http://localhost:8000/demo).
 
 With the backend environment active, install the test client dependency and run the test suite from the backend directory.
 
